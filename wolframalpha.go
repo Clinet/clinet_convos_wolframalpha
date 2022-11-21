@@ -5,11 +5,16 @@ import (
 	"strings"
 
 	"github.com/Clinet/clinet_convos"
+	"github.com/Clinet/clinet_features"
 	"github.com/Clinet/clinet_storage"
 	"github.com/JoshuaDoes/go-wolfram"
 )
 
-var WolframAlpha *ClientWolframAlpha
+var Feature = features.Feature{
+	Help: "Wolfram|Alpha is available as a conversation service. You can @Clinet with a question, and Wolfram|Alpha may answer it!",
+	Name: "wolframalpha",
+	ServiceConvo: &ClientWolframAlpha{},
+}
 
 type ClientWolframAlpha struct {
 	Client *wolfram.Client
@@ -20,14 +25,12 @@ func (wa *ClientWolframAlpha) Login() error {
 	if err := cfg.LoadFrom("wolframalpha"); err != nil {
 		return err
 	}
-	appID, err := cfg.ExtraGet("cfg", "appID")
+	appID, err := cfg.ConfigGet("cfg", "appID")
 	if err != nil {
 		return err
 	}
-	WolframAlpha = &ClientWolframAlpha{
-		Client: &wolfram.Client{
-			AppID: appID.(string),
-		},
+	wa.Client = &wolfram.Client{
+		AppID: appID.(string),
 	}
 	return nil
 }
