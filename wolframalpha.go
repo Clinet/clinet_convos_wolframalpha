@@ -11,8 +11,8 @@ import (
 )
 
 var Feature = features.Feature{
-	Help: "Wolfram|Alpha is available as a conversation service. You can @Clinet with a question, and Wolfram|Alpha may answer it!",
 	Name: "wolframalpha",
+	Desc: "Wolfram|Alpha is available as a conversation service. You can @Clinet with a question, and Wolfram|Alpha may answer it!",
 	ServiceConvo: &ClientWolframAlpha{},
 }
 
@@ -38,7 +38,8 @@ func (wa *ClientWolframAlpha) Login() error {
 func (wa *ClientWolframAlpha) Query(query *convos.ConversationQuery, lastState *convos.ConversationState) (*convos.ConversationResponse, error) {
 	resp := &convos.ConversationResponse{}
 	if lastState != nil {
-		resp.WolframAlpha = lastState.Response.WolframAlpha
+		resp = lastState.Response
+		resp.TextSimple = ""
 	}
 
 	wolframConvo, err := wa.Client.GetConversationalQuery(query.Text, wolfram.Metric, resp.WolframAlpha)
